@@ -143,16 +143,18 @@ export default async (req, res, options, done) => {
       const email = req.query.email
 
       // If session redirect to avoid error from Sign In Link
-      try {
-        const session = getSession(sessionToken)
-        if (session) {
-          if (callbackUrl) {
-            return redirect(callbackUrl)
-          } else {
-            return redirect(baseUrl)
+      if (sessionToken) {
+        try {
+          const session = getSession(sessionToken)
+          if (session) {
+            if (callbackUrl) {
+              return redirect(callbackUrl)
+            } else {
+              return redirect(baseUrl)
+            }
           }
-        }
-      } catch (error) {}
+        } catch (error) {}
+      }
     
       // Verify email and verification token exist in database
       const invite = await getVerificationRequest(email, verificationToken, secret, provider)

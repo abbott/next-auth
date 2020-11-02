@@ -48,12 +48,16 @@ export default ({ baseUrl, basePath, error, res }) => {
       // @TODO Check if user is signed in already with the same email address.
       // If they are, no need to display this message, can just direct to callbackUrl
       statusCode = 403
-      heading = <h1>Unable to sign in</h1>
+      heading = <h1>Sign in link invalid</h1>
       message =
         <div>
           <div className='message'>
-            <p>The sign in link is no longer valid.</p>
-            <p>It may have be used already or it may have expired.</p>
+            <p>
+              It may have been used already or expired.
+            </p>
+            <p>
+              Generate a new link using your approved email address.
+            </p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
