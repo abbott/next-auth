@@ -138,10 +138,22 @@ export default async (req, res, options, done) => {
         return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
       }
 
-      const { getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(options)
+      const { getSession, getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(options)
       const verificationToken = req.query.token
       const email = req.query.email
 
+      // If session redirect to avoid error from Sign In Link
+      try {
+        const session = getSession(sessionToken)
+        if (session) {
+          if (callbackUrl) {
+            return redirect(callbackUrl)
+          } else {
+            return redirect(baseUrl)
+          }
+        }
+      } catch (error) {}
+    
       // Verify email and verification token exist in database
       const invite = await getVerificationRequest(email, verificationToken, secret, provider)
       if (!invite) {
